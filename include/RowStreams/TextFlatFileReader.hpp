@@ -107,6 +107,7 @@ namespace RowStreams
 		}
 	};
 
+	/// Bridge used in the pipeline construction syntax.
 	PartialPipeline<TextFlatFileReader> 
 		read_text_file(const RowDef & row_def, const std::string & file_name, const char sep = '\t')
 	{

@@ -8,8 +8,8 @@
 
 namespace RowStreams
 {
-	/// Stores row data in a text file.
-	/// Tab characters are output in between columns and
+	/// Stores a row stream in a text file.
+	/// By default uses tab characters are in between columns and
 	/// newline characters in between rows.
 	template<class Source>
 	class TextFlatFileWriter
@@ -106,6 +106,7 @@ namespace RowStreams
 		}
 	};
 
+	/// Bridge class used in the pipeline construction syntax.
 	class TextFlatFileWriterPrototype
 	{
 		std::string fileName_;

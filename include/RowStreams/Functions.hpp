@@ -35,6 +35,10 @@ namespace RowStreams
 		}
 	};
 
+	/// A function that produces a value given an input row.
+	/// Functions can be combined using normal expression syntax
+	/// (or will be). Composite functions don't use indirect function
+	/// calls, allowing for better optimization by the compiler.
 	template<class DataType, class Operator>
 	class Function
 	{
@@ -74,7 +78,7 @@ namespace RowStreams
 
 	namespace Functions
 	{
-		/// Operator that extracts a value from a row column.
+		/// Function that extracts a column value from a row.
 		template<class ColumnType>
 		class Column
 		{
@@ -106,6 +110,10 @@ namespace RowStreams
 			return Function<ColumnType, Column<ColumnType> >(Column<ColumnType>(name));
 		}
 
+		/// Function that wraps a literal value. The same value is returned no matter
+		/// what the input is.  This is necessary to avoid littering the function code
+		/// with extra methods to handle literal values that can not be converted
+		/// by the compiler into functions.
 		template<class T>
 		class Value
 		{

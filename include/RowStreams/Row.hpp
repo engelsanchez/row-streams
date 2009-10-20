@@ -9,6 +9,9 @@ namespace RowStreams
 {
 	/// Represents a row of data containing a number of columns 
 	/// of potentially different plain data types.
+	/// Basically consists of a buffer and methods to set/get values 
+	/// of different types from the buffer.  Values will be limited
+	/// to simple data types and PODs.
 	class Row
 	{
 		const RowDef * rowDef_;
@@ -62,6 +65,8 @@ namespace RowStreams
 			return rowDef_;
 		}
 
+		/// Changes the spec for a row, which may make it shrink or expand to
+		/// accomodate more columns.
 		void rowDef(const RowDef * rowDef)
 		{
 			size_t new_capacity = rowDef->capacity();

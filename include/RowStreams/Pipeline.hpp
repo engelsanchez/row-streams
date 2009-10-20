@@ -5,6 +5,9 @@ namespace RowStreams
 {
 	class NoModule {};
 
+	/// Used to enable the special pipeline construction syntax.
+	/// Handles the connection between a module and its source without
+	/// using any indirections (no virtual method calls introduced).
 	template<class Module, class PrevModule = NoModule>
 	class PartialPipeline
 	{
@@ -53,8 +56,14 @@ namespace RowStreams
 		}
 	};
 
+	/// A row pipeline that, when executed, pulls a stream of rows into a data sink
+	/// (for example, a flat file).
 	class Pipeline
 	{
+		// These are used to wrap any row pipeline built
+		// using the special syntax, which all result in different types
+		// only available at compile time.  So running a pipeline does go through
+		// on virtual function call.
 		class Runnable
 		{
 		public:

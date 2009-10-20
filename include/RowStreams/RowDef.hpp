@@ -7,6 +7,10 @@
 
 namespace RowStreams
 {
+	/// Holds information about the layout of the buffer used by rows in a stream,
+	/// including names, indices and offsets for all columns and buffer capacity,
+	/// which may be bigger than its size to account for rows that grow as they go
+	/// down the stream.
 	class RowDef
 	{
 	public:

@@ -8,6 +8,7 @@ namespace RowStreams
 	template<class Source, class ColumnType>
 	class ColumnAdder
 	{
+		/// Row source. We don't own it, so no deletes.
 		Source * source_;
 		std::string name_;
 		RowDef rowDef_;

@@ -5,6 +5,8 @@
 
 namespace RowStreams
 {
+	/// Parses a value from a c-string.
+	/// TODO: Suitable for numeric types, but not for string values yet.
 	template<class T>
 	class ValueParser
 	{
@@ -18,6 +20,9 @@ namespace RowStreams
 		}
 	};
 
+	/// ValueParser specialization for ints. Notice that
+	/// the default template can handle ints, but specialization
+	/// will be useful to allow for faster, custom made parsers.
 	template<>
 	class ValueParser<int>
 	{
@@ -32,6 +37,9 @@ namespace RowStreams
 		}
 	};
 
+	/// ValueParser specialization for doubles. Notice that
+	/// the default template can handle doubles, but specialization
+	/// will be useful to allow for faster, custom made parsers.
 	template<>
 	class ValueParser<double>
 	{
