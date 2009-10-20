@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="include"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -109,6 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="include"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -157,7 +159,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="src"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -167,10 +169,46 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="include"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\RowStreams\ColumnDef.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\ColumnDefHelpers.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\ForwardDeclarations.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\Row.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\RowDef.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\StableHeaders.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\TextFlatFileReader.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\TextFlatFileWriter.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\RowStreams\ValueParser.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
