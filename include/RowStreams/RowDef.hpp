@@ -14,25 +14,25 @@ namespace RowStreams
 		typedef ColumnDefVector::const_iterator ConstAttrIter;
 
 	private:
+		/// A minimum size will tell the new operator to allocate
+		/// chunks correctly aligned for any data this size or smaller.
+		/// XXX Look for more portable way to guarantee safe alignment and use less data per row.
+		enum { MIN_SIZE = 8 };
+		size_t size_;
+		size_t capacity_;
+
 		ColumnDefVector columnDefs_;
 		typedef std::map<std::string, ColumnDef*> AttrMap;
 		AttrMap attrMap_;
 
-		size_t size_;
-		/// XXX Look for better way to guarantee safe alignment
-		enum { MIN_SIZE = 8 };
-
-		/// Does not allow assignment operation.
-		RowDef & operator=(const RowDef & other);
-
 	public:
 		RowDef()
-			: size_(0)
+			: size_(0), capacity_(0)
 		{
 		}
 
 		RowDef(const RowDef & other)
-			:size_(other.size_)
+			: size_(other.size_), capacity_(other.capacity_)
 		{
 			for(ConstAttrIter col_iter = other.begin();
 				col_iter != other.end();
@@ -50,6 +50,36 @@ namespace RowStreams
 			}
 		}
 
+		RowDef & operator=(const RowDef & other)
+		{
+			size_ = other.size_;
+			capacity_ = other.capacity_;
+
+			for(ConstAttrIter attr = begin(); attr != end(); ++attr)
+			{
+				delete *attr;
+			}
+
+			columnDefs_.clear();
+			attrMap_.clear();
+
+			for(ConstAttrIter col_iter = other.begin();
+				col_iter != other.end();
+				++col_iter)
+			{
+				columnDefs_.push_back((*col_iter)->clone());
+			}
+
+			for(ConstAttrIter col_iter = begin();
+				col_iter != end();
+				++col_iter)
+			{
+				ColumnDef * col = *col_iter;
+				attrMap_[col->name()] = col;
+			}
+
+			return *this;
+		}
 
 		~RowDef()
 		{
@@ -77,16 +107,33 @@ namespace RowStreams
 			return *this;
 		}
 
+		RowDef operator << (const ColumnDef & columnDef) const
+		{
+			RowDef rowDefCopy = *this;
+			rowDefCopy.add(columnDef);
+			return rowDefCopy;
+		}
+
 		size_t size() const
 		{
 			return std::max(size_, size_t(MIN_SIZE));
+		}
+
+		size_t capacity() const
+		{
+			return std::max(size(), capacity_);
+		}
+
+		void capacity(size_t capacity)
+		{
+			capacity_ = capacity;
 		}
 
 		/// Returns a newly created buffer to be used by a Row object 
 		/// that follows this definition.
 		char * newBuffer() const
 		{
-			return new char[size()];
+			return new char[capacity()];
 		}
 
 		ConstAttrIter begin() const
@@ -110,6 +157,15 @@ namespace RowStreams
 			if(it != attrMap_.end())
 				return it->second;
 			return 0;
+		}
+
+		size_t index(const std::string & name) const
+		{
+			AttrMap::const_iterator it = attrMap_.find(name);
+			if(it != attrMap_.end())
+				return it->second->index();
+
+			throw std::runtime_error("No index for invalid column "+name);
 		}
 
 		size_t offset(const std::string & name) const

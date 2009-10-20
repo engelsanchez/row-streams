@@ -3,6 +3,7 @@
 
 #include "RowStreams/Row.hpp"
 #include "RowStreams/ColumnDef.hpp"
+#include "RowStreams/Pipeline.hpp"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -25,9 +26,26 @@ namespace RowStreams
 
 	public:
 		TextFlatFileReader(const RowDef & rowDef, const std::string & file_name, const char sep = '\t')
-			: rowDef_(rowDef), fileName_(file_name), sep_(sep), ifs_(fileName_.c_str())
+			: rowDef_(rowDef), fileName_(file_name), sep_(sep)
 		{
-			if(ifs_.fail())
+		}
+
+		TextFlatFileReader(const TextFlatFileReader & other)
+			: rowDef_(other.rowDef_), fileName_(other.fileName_), sep_(other.sep_)
+		{
+		}
+
+		TextFlatFileReader & operator=(const TextFlatFileReader & other)
+		{
+			rowDef_ = other.rowDef_;
+			fileName_ = other.fileName_;
+			sep_ = other.sep_;
+		}
+
+		void init()
+		{
+			ifs_.open(fileName_.c_str());
+			if(!ifs_)
 				throw std::runtime_error("Failed to open "+fileName_);
 			// read header
 			std::getline(ifs_, line_);
@@ -76,11 +94,24 @@ namespace RowStreams
 			return row;
 		}
 
+		/// This can be removed with a bit of work, but for now, everybody needs to define
+		/// a way to set the source module.
+		template<class T>
+		void source(T* src)
+		{
+		}
+
 		const RowDef & rowDef()
 		{
 			return rowDef_;
 		}
 	};
+
+	PartialPipeline<TextFlatFileReader> 
+		read_text_file(const RowDef & row_def, const std::string & file_name, const char sep = '\t')
+	{
+		return PartialPipeline<TextFlatFileReader>(NoModule(), TextFlatFileReader(row_def, file_name, sep));
+	}
 
 }
 

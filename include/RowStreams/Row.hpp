@@ -3,11 +3,12 @@
 
 #include "RowStreams/RowDef.hpp"
 #include <vector>
+#include <cstring>
 
 namespace RowStreams
 {
 	/// Represents a row of data containing a number of columns 
-	/// of potentially different data types.
+	/// of potentially different plain data types.
 	class Row
 	{
 		const RowDef * rowDef_;
@@ -25,19 +26,19 @@ namespace RowStreams
 		}
 
 		template<class T>
-		T get(size_t index, size_t ofs)
+		T get(size_t index, size_t ofs) const
 		{
 			return *((T*)(buf_+ofs));
 		}
 
 		template<class T>
-		T get(size_t index)
+		T get(size_t index) const
 		{
 			size_t ofs = rowDef_->offset(index);
 			return get(index, ofs);
 		}
 
-		bool isNull(size_t index)
+		bool isNull(size_t index) const
 		{
 			return !valueSet_[index];
 		}
@@ -55,6 +56,27 @@ namespace RowStreams
 			size_t ofs = rowDef_->offset(index);
 			set(index, ofs, value);
 		}
+
+		const RowDef * rowDef() const
+		{
+			return rowDef_;
+		}
+
+		void rowDef(const RowDef * rowDef)
+		{
+			size_t new_capacity = rowDef->capacity();
+			size_t old_capacity = rowDef_->capacity();
+
+			if(new_capacity = old_capacity)
+			{
+				char * new_buf = new char[new_capacity];
+				::memcpy(new_buf, buf_, std::min(rowDef_->size(), rowDef->size()));
+				delete buf_;
+				buf_ = new_buf;
+			}
+			rowDef_ = rowDef;
+		}
+
 	};
 
 }

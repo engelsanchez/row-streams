@@ -50,7 +50,7 @@ namespace RowStreams
 	};
 
 	template<class T>
-	ColumnDefTpl<T> col_def(const std::string & name)
+	ColumnDefTpl<T> column_def(const std::string & name)
 	{
 		return ColumnDefTpl<T>(name);
 	}
