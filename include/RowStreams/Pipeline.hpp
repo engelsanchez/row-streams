@@ -63,7 +63,7 @@ namespace RowStreams
 		// These are used to wrap any row pipeline built
 		// using the special syntax, which all result in different types
 		// only available at compile time.  So running a pipeline does go through
-		// on virtual function call.
+		// one virtual function call.
 		class Runnable
 		{
 		public:
